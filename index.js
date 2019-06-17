@@ -3,10 +3,38 @@ let inquirer = require("inquirer");
 
 const api = require("./api");
 
+const showOptions = () => api.cliOptions2d();
+
+const action = {
+  type: "list",
+  name: "choice",
+  message: "Execute find or show find options",
+  choices: [
+    { name: "Execute", cmd: api.findInFiles },
+    { name: "Show", cmd: api.showOptions }
+  ]
+};
+
+const search = [
+  {
+    type: "input",
+    message: "Enter search string",
+    name: "str"
+  }
+];
+
+let choice;
 const cmd = () => {
-  return inquirer
-    .prompt([{ type: "input", message: "Enter string to search", name: "str" }])
-    .then(({ str }) => api.findInFiles(str))
+  inquirer
+    .prompt(action)
+    .then(answers => {
+      console.log(answers);
+      choice = action.choices.filter(
+        choice => choice.name === answers.choice
+      )[0].cmd;
+      return inquirer.prompt(search);
+    })
+    .then(answers => choice(answers.str))
     .catch(e => console.error("Failed running find cli with", e.message));
 };
 

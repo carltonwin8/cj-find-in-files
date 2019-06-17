@@ -13,6 +13,9 @@ const cliOptions2d = (str = "<string>") => [
   ["-exec", "grep", "-inH", `${str}`, "{}", ";"]
 ];
 
+function showOptions(str) {
+  console.log(cliOptions2d(str));
+}
 function findInFiles(str) {
   const findCli = cliOptions2d(str).reduce((a, i) => [...a, ...i], []);
   const find = spawn("find", findCli, { stdio: "inherit" });
@@ -21,5 +24,5 @@ function findInFiles(str) {
 
 module.exports = {
   findInFiles,
-  cliOptions2d
+  showOptions
 };
